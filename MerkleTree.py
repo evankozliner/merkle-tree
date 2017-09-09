@@ -2,11 +2,6 @@ import os
 import math
 import hashlib
 
-""" TODO
-    1. File implementation example
-"""
-
-
 class MerkleTree:
     class Node:
         def __init__(self, mom, dad, hash_val):
