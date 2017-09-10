@@ -5,7 +5,6 @@ TEST_DIR = "test2"
 TEST_FILE = "test2/b/f5.txt"
 TEST_FILE_2 = "test2/b/f9.txt"
 
-# TODO maybe there's a pre baked method for this?
 def get_paths(start_path):
     paths = []
 

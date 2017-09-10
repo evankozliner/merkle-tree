@@ -1,3 +1,5 @@
+""" Evan Kozliner """
+
 import os
 import math
 import hashlib
@@ -38,7 +40,6 @@ class MerkleTree:
         self.root_hash = None
         self.node_table = {}
         self.max_height = math.ceil(math.log(len(items), 2))
-        # TODO leaves should be internal
         self.leaves = map(self._leafify, map(self._md5sum, items))
         self.build_tree()
 
@@ -114,9 +115,8 @@ class MerkleTree:
 
         return self._audit(actual_hash, proof_hashes)
 
-    # TODO can this be consolidated into the earlier method?
     def _handle_solo_node_case(self,):
-        """ If only one item is provided, neither case will work. """
+        # The earlier method for building the tree will fail in a one node case
         if len(self.leaves) == 1:
             solo_node = self.leaves.pop()
             self.root_hash = solo_node.hash
@@ -137,7 +137,6 @@ class MerkleTree:
         self._handle_solo_node_case()
         while self.root_hash == None:
             if len(stack) >= 2 and stack[-1].height == stack[-2].height:
-                # TODO clean this up
                 mom = stack.pop()
                 dad = stack.pop()
                 child_hash = self._md5sum(mom.hash + dad.hash)
@@ -174,14 +173,16 @@ class MerkleTree:
         if self.root_hash == None:
             return False
 
+        hash_ = self._md5sum(data)
+
         # A one element tree does not make much sense, but if one exists
-        # the only proof it would need would be the hash of itself
-        if self.max_height == 0 and proof_hashes[0] == self.root_hash:
+        # we simply need to check if the files hash is the correct root
+        if self.max_height == 0 and hash_ == self.root_hash:
             return True
-        if self.max_height == 0 and proof_hashes[0] != self.root_hash:
+        if self.max_height == 0 and hash_ != self.root_hash:
             return False
 
-        return self._audit(self._md5sum(data), proof_hashes)
+        return self._audit(hash_, proof_hashes)
     
     def get_authentication_path(self, item):
         """ Returns an authentication path for an item (not hashed) in 
@@ -198,4 +199,5 @@ class MerkleTree:
             raise Exception("The requested item is not in the merkle tree.")
 
         return self._get_authentication_path_by_hash(hash_)
+
 
