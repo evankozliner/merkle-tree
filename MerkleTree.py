@@ -71,9 +71,9 @@ class MerkleTree:
         m = hashlib.md5()
         if os.path.isfile(data):
             try:   
-                f = file(fn, 'rb')
+                f = file(data, 'rb')
             except:
-                return 'ERROR: unable to open %s' % fn
+                return 'ERROR: unable to open %s' % data
             while True:
                 d = f.read(8096)
                 if not d:
@@ -174,8 +174,8 @@ class MerkleTree:
         if self.root_hash == None:
             return False
 
-        # A one element tree does not make much sense, but in case one exists
-        # this simple test should be sufficient for validity
+        # A one element tree does not make much sense, but if one exists
+        # the only proof it would need would be the hash of itself
         if self.max_height == 0 and proof_hashes[0] == self.root_hash:
             return True
         if self.max_height == 0 and proof_hashes[0] != self.root_hash:
@@ -199,6 +199,3 @@ class MerkleTree:
 
         return self._get_authentication_path_by_hash(hash_)
 
-
-
-        
