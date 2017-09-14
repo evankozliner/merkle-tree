@@ -24,8 +24,8 @@ def main():
     tree = MerkleTree(paths)
 
 
-    path = tree.get_authentication_path(TEST_FILE)
-    print path
+    path = tree.get_branch(TEST_FILE)
+    print tree.audit(TEST_FILE,path)
     print tree.audit(TEST_FILE_2, path)
 
 if __name__ == "__main__":

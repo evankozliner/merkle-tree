@@ -3,6 +3,7 @@
 import os
 import math
 import hashlib
+import copy
 
 class MerkleTree:
     class Node:
@@ -48,7 +49,7 @@ class MerkleTree:
         leaf.height = 0
         return leaf
 
-    def _get_authentication_path_by_hash(self, hash_):
+    def _get_branch_by_hash(self, hash_):
         """ Returns an authentication path as a list in order from the top
             to the bottom of the tree (assumes preconditions have been checked).
         """
@@ -182,9 +183,10 @@ class MerkleTree:
         if self.max_height == 0 and hash_ != self.root_hash:
             return False
 
-        return self._audit(hash_, proof_hashes)
+        proof_hashes_cp = copy.copy(proof_hashes)
+        return self._audit(hash_, proof_hashes_cp)
     
-    def get_authentication_path(self, item):
+    def get_branch(self, item):
         """ Returns an authentication path for an item (not hashed) in 
             the Merkle tree as a list in order from the top of the tree
             to the bottom.
@@ -198,6 +200,6 @@ class MerkleTree:
         if not hash_ in self._get_leaf_hashes():
             raise Exception("The requested item is not in the merkle tree.")
 
-        return self._get_authentication_path_by_hash(hash_)
+        return self._get_branch_by_hash(hash_)
 
 

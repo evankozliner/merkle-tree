@@ -74,7 +74,7 @@ class TestMerkleTree(unittest.TestCase):
 
     def test_three_element_auth_path(self):
         tree = MerkleTree(THREE_ELEMENT_DATA)
-        result = tree.get_authentication_path("one")
+        result = tree.get_branch("one")
         sibling_hash = md5sum(md5sum(THREE_ELEMENT_DATA[1]) + \
                 md5sum(THREE_ELEMENT_DATA[2]))
         self.assertEqual(result, 
