@@ -37,12 +37,14 @@ class MerkleTree:
         if len(items) <= 0:
             raise Exception("items must contain at least 1" + \
                     "element for a valid merkle tree.")
-        self.is_built = True
+        self.is_built = False
         self.root_hash = None
         self.node_table = {}
         self.max_height = math.ceil(math.log(len(items), 2))
         self.leaves = map(self._leafify, map(self._md5sum, items))
-        self.build_tree()
+
+        if items and len(items) > 0:
+            self.build_tree()
 
     def _leafify(self, data):
         leaf = self.Node(None, None, data)
