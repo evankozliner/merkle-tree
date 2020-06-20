@@ -26,3 +26,9 @@ OK
 I've upgraded the version on this package to Python 3. I've tested under Python
 3.6.10. 
 
+### Changelog
+
+2020/06/20 - Moves package to Python 3. Begins refactoring for typing / better documentation
+2017/09/13 - Initial creation of package
+
+
