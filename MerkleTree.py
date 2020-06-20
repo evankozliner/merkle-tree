@@ -4,35 +4,9 @@ import os
 import math
 import hashlib
 import copy
+from Node import Node
 
 class MerkleTree:
-    class Node:
-        def __init__(self, mom, dad, hash_val):
-            self.mom = mom
-            self.dad = dad
-            if mom == None:
-                self._height = 0
-            else:
-                self._height = mom.height + 1
-
-            self.hash = hash_val
-            self.child = None
-    
-        @property
-        def height(self):
-            return self._height
-    
-        @height.setter
-        def height(self,height):
-            if height < 0:
-                raise Exception("Attempt to set height < 0.")
-            self._height = height
-
-        def get_parent_by_spouse(self, spouse_hash):
-            if spouse_hash == self.mom.hash:
-                return self.dad
-            return self.mom
-
     def __init__(self, items):
         if len(items) <= 0:
             raise Exception("items must contain at least 1" + \
@@ -49,7 +23,7 @@ class MerkleTree:
             self.build_tree()
 
     def _leafify(self, data):
-        leaf = self.Node(None, None, data)
+        leaf = Node(None, None, data)
         leaf.height = 0
         return leaf
 
@@ -145,7 +119,7 @@ class MerkleTree:
                 mom = stack.pop()
                 dad = stack.pop()
                 child_hash = self._md5sum(mom.hash + dad.hash)
-                child = self.Node(mom, dad, child_hash)
+                child = Node(mom, dad, child_hash)
                 self.node_table[child_hash] = child
                 mom.child = child
                 dad.child = child
