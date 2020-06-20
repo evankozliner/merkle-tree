@@ -41,7 +41,9 @@ class MerkleTree:
         self.root_hash = None
         self.node_table = {}
         self.max_height = math.ceil(math.log(len(items), 2))
-        self.leaves = map(self._leafify, map(self._md5sum, items))
+        self.leaves = [self._leafify(hash_) 
+                for hash_ in [self._md5sum(item) 
+                    for item in items]]
 
         if items and len(items) > 0:
             self.build_tree()
@@ -86,7 +88,7 @@ class MerkleTree:
             f.close()
         # Otherwise it could be either 1) a directory 2) miscellaneous data (like json)
         else:
-            m.update(data)
+            m.update(data.encode('utf-8'))
         return m.hexdigest()
 
     def _audit(self, questioned_hash, proof_hashes):

@@ -7,7 +7,7 @@ TWO_ELEMENT_DATA = ["one", "two"]
 THREE_ELEMENT_DATA = ["one", "two", "three"]
 
 def md5sum(data):
-    data = str(data)
+    data = str(data).encode('utf-8')
     m = hashlib.md5()
     m.update(data)
     return m.hexdigest()
