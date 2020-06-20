@@ -1,7 +1,28 @@
 # Merkle Tree
 
-### Notes 
-1. Accompanies [this blog post](https://medium.com/@evankozliner/merkle-tree-introduction-4c44250e2da7)
-2. Not exactly the cleanest code ever--feel free to email me with any questions
-3. In *no way* intended for any sort of production use case!
+This is an educational project that shows a basic Merkle Tree implementation. 
+
+1. Accompanies [this blog post](https://medium.com/@evankozliner/merkle-tree-introduction-4c44250e2da7) where the concept is fleshed out in detail.
+2. In *no way* intended for any sort of production use case!
+3. Implementation built from the following paper: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.84.9700&rep=rep1&type=pdf
+
+
+## Running this project and testing
+
+```
+git checkout https://github.com/evankozliner/merkle-tree.git
+cd merkle-tree
+
+python MerkleTreeTest.py
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.002s
+
+OK
+```
+
+### Quick note on Python version
+
+I've upgraded the version on this package to Python 3. I've tested under Python
+3.6.10. 
 

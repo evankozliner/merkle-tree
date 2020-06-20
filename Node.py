@@ -1,3 +1,6 @@
+from typing import *
+
+# TODO typing everywhere
 class Node:
     def __init__(self, mom, dad, hash_val):
         self.mom = mom

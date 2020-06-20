@@ -4,9 +4,12 @@ import os
 import math
 import hashlib
 import copy
+from typing import *
 from Node import Node
 
+# TODO Typing everywhere
 class MerkleTree:
+    # TODO comment on items
     def __init__(self, items):
         if len(items) <= 0:
             raise Exception("items must contain at least 1" + \
@@ -20,7 +23,7 @@ class MerkleTree:
                     for item in items]]
 
         if items and len(items) > 0:
-            self.build_tree()
+            self.tree_hash()
 
     def _leafify(self, data):
         leaf = Node(None, None, data)
@@ -51,9 +54,10 @@ class MerkleTree:
         m = hashlib.md5()
         if os.path.isfile(data):
             try:   
-                f = file(data, 'rb')
+                f = open(data, 'rb')
             except:
-                return 'ERROR: unable to open %s' % data
+                raise Exception('ERROR: unable to open %s' % data)
+            # Avoid reading the whole file all at once in case of large file
             while True:
                 d = f.read(8096)
                 if not d:
@@ -104,13 +108,14 @@ class MerkleTree:
     def _get_leaf_hashes(self):
         return [node.hash for node in self.node_table.values() if node.mom == None]
 
-    # TODO break into sub methods?
-    def build_tree(self):
+    def tree_hash(self):
         """ Builds a merkle tree by adding leaves one at a time to a stack,
             and combining leaves in the stack when they are of the same height.
             Expected items to be an array of type Node.
             Also constructs node_table, a dict containing hashes that map to 
             individual nodes for auditing purposes.
+            Psuedo code can be found here:
+            http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.84.9700&rep=rep1&type=pdf
         """
         stack = []
         self._handle_solo_node_case()
@@ -148,6 +153,8 @@ class MerkleTree:
             tree, ceil(log2(n)), as one node is needed for proof per layer.
 
             If the tree has not been built, returns False for any data.
+            
+            Expects a relative path for data if data is a file.
         """
         if self.root_hash == None:
             return False

@@ -6,6 +6,7 @@ ONE_ELEMENT_DATA = "text"
 TWO_ELEMENT_DATA = ["one", "two"]
 THREE_ELEMENT_DATA = ["one", "two", "three"]
 
+# TODO typing everywhere
 def md5sum(data):
     data = str(data).encode('utf-8')
     m = hashlib.md5()
@@ -69,6 +70,7 @@ class TestMerkleTree(unittest.TestCase):
         result = tree.audit(THREE_ELEMENT_DATA[2], proof)
         self.assertTrue(result)
 
+    # TODO
     def test_three_element_invalid(self):
         return
 
