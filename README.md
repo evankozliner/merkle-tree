@@ -10,13 +10,21 @@ This is an educational project that shows a basic Merkle Tree implementation.
 ## Running this project and testing
 
 ```
-git checkout https://github.com/evankozliner/merkle-tree.git
-cd merkle-tree
+% git checkout https://github.com/evankozliner/merkle-tree.git
+% cd merkle-tree
 
-python MerkleTreeTest.py
+
+% python MerkleTreeTest.py
 ..........
 ----------------------------------------------------------------------
 Ran 10 tests in 0.002s
+
+OK
+
+% python FileUsageTest.py
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.003s
 
 OK
 ```
@@ -28,7 +36,9 @@ I've upgraded the version on this package to Python 3. I've tested under Python
 
 ### Changelog
 
+```
+2020/06/21 - More refactoring, comments, illustrate example traversal
 2020/06/20 - Moves package to Python 3. Begins refactoring for typing / better documentation
 2017/09/13 - Initial creation of package
-
+```
 

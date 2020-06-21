@@ -13,7 +13,7 @@ TEST_FILE_MISSING = "test2/some/fake/path/f9.txt"
 # pieces of the movie as files. As I present those files to you, the downloader, I'll 
 # present an authentication path that you can validate using a root hash you
 # trust. Because it would be computionally infeasible to do build a fake
-# authentication path, you can trust the data, even you don't know the sender. 
+# authentication path, you can trust the data, even though you don't know the sender. 
 class TestMerkleTreeFiles(unittest.TestCase):
 
     def setUp(self):
