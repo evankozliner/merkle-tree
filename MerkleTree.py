@@ -8,8 +8,10 @@ from typing import *
 from Node import Node
 
 class MerkleTree:
-    # TODO comment on items
     def __init__(self, items: List[str]):
+        """ Items are some list of data or relative paths you would like to act
+            as leaves in the tree.
+        """
         if len(items) <= 0:
             raise Exception("items must contain at least 1" + \
                     "element for a valid merkle tree.")
@@ -35,6 +37,7 @@ class MerkleTree:
         """
         stack = []
         self._handle_solo_node_case()
+        leaves_cp = copy.deepcopy(self.leaves)
         while self.root_hash == None:
             if len(stack) >= 2 and stack[-1].height == stack[-2].height:
                 mom = stack.pop()
@@ -58,6 +61,7 @@ class MerkleTree:
             else:
                 stack[-1].height += 1
         self.is_built = True
+        self.leaves = leaves_cp
 
     def audit(self, data: str, proof_hashes: List[str]) -> bool:
         """ Returns a boolean testing if a data (a file or object)
@@ -87,7 +91,6 @@ class MerkleTree:
         proof_hashes_cp = copy.copy(proof_hashes)
         return self._audit(hash_, proof_hashes_cp)
     
-    # TODO consider switching to giving full auth path
     def get_branch(self, item: str) -> List[str]:
         """ Returns an authentication path for an item (not hashed) in 
             the Merkle tree as a list in order from the top of the tree
@@ -103,6 +106,16 @@ class MerkleTree:
             raise Exception("The requested item is not in the merkle tree.")
 
         return self._get_branch_by_hash(hash_)
+
+    def traverse(self) -> List[List[str]]:
+        """ Provides the authentication path for all the leaves in the tree e.g.
+            [hash_leaf_node_1: [auth_hash_1, auth_hash_2...]
+            ...
+            ]
+        """
+        
+        return [[leaf_hash, self._get_branch_by_hash(leaf_hash)] 
+                for leaf_hash in self._get_leaf_hashes()]
 
     def _leafify(self, data: str) -> Node:
         leaf = Node(None, None, data)
@@ -121,6 +134,8 @@ class MerkleTree:
             path.append(spouse.hash)
             hash_ = child.hash
 
+        # Keep the root hash on the auth path, even though clients should
+        # already have it.
         path.append(hash_)
         path.reverse()
         return path
@@ -185,6 +200,6 @@ class MerkleTree:
             self.node_table[solo_node.hash] = solo_node
 
     def _get_leaf_hashes(self) -> List[str]:
-        return [node.hash for node in self.node_table.values() if node.mom == None]
+        return [node.hash for node in self.leaves]
 
 

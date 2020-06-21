@@ -79,6 +79,25 @@ class TestMerkleTree(unittest.TestCase):
                 [md5sum(md5sum(THREE_ELEMENT_DATA[0]) + sibling_hash),
                  sibling_hash])
 
+    def test_traverse(self):
+        tree = MerkleTree(THREE_ELEMENT_DATA)
+        result = tree.traverse()
+
+        self.assertEqual(len(result), 3)
+        self.assertEqual(len(result[0]), 2)
+        self.assertEqual(len(result[0][1]), 2)
+        self.assertEqual(len(result[1][1]), 3)
+        self.assertEqual(len(result[2][1]), 3)
+
+        sibling_hash = md5sum(md5sum(THREE_ELEMENT_DATA[1]) + \
+                md5sum(THREE_ELEMENT_DATA[2]))
+        auth_path_one = [md5sum(md5sum(THREE_ELEMENT_DATA[0]) + sibling_hash),sibling_hash]
+
+        example_leaf = md5sum(THREE_ELEMENT_DATA[0])
+        for path in result:
+            if path[0] == example_leaf:
+                self.assertEqual(path[1], auth_path_one)
+
 if __name__ == "__main__":
     unittest.main()
 
