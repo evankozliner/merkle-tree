@@ -3,7 +3,7 @@
 This is an educational project that shows a basic Merkle Tree implementation. 
 
 1. Accompanies [this blog post](https://medium.com/@evankozliner/merkle-tree-introduction-4c44250e2da7) where the concept is fleshed out in detail.
-2. In *no way* intended for any sort of production use case!
+2. In not intended for production use cases. There are more high-end ways to traverse the tree than what is presented here. Read the below paper for some examples. 
 3. Implementation built from the following paper: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.84.9700&rep=rep1&type=pdf
 
 
