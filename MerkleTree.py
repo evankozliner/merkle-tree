@@ -7,10 +7,9 @@ import copy
 from typing import *
 from Node import Node
 
-# TODO Typing everywhere
 class MerkleTree:
     # TODO comment on items
-    def __init__(self, items):
+    def __init__(self, items: List[str]):
         if len(items) <= 0:
             raise Exception("items must contain at least 1" + \
                     "element for a valid merkle tree.")
@@ -25,90 +24,7 @@ class MerkleTree:
         if items and len(items) > 0:
             self.tree_hash()
 
-    def _leafify(self, data):
-        leaf = Node(None, None, data)
-        leaf.height = 0
-        return leaf
-
-    def _get_branch_by_hash(self, hash_):
-        """ Returns an authentication path as a list in order from the top
-            to the bottom of the tree (assumes preconditions have been checked).
-        """
-        path = []
-        while hash_ != self.root_hash:
-            node = self.node_table[hash_]
-            child = node.child
-            spouse = child.get_parent_by_spouse(hash_)
-            path.append(spouse.hash)
-            hash_ = child.hash
-
-        path.append(hash_)
-        path.reverse()
-        return path
-    
-    def _md5sum(self, data):
-        """ Returns an md5 hash of data. 
-            If data is a file it is expected to contain its full path.
-        """
-        data = str(data)
-        m = hashlib.md5()
-        if os.path.isfile(data):
-            try:   
-                f = open(data, 'rb')
-            except:
-                raise Exception('ERROR: unable to open %s' % data)
-            # Avoid reading the whole file all at once in case of large file
-            while True:
-                d = f.read(8096)
-                if not d:
-                    break
-                m.update(d)
-            f.close()
-        # Otherwise it could be either 1) a directory 2) miscellaneous data (like json)
-        else:
-            m.update(data.encode('utf-8'))
-        return m.hexdigest()
-
-    def _audit(self, questioned_hash, proof_hashes):
-        """ Tests if questioned_hash is a member of the merkle tree by
-            hashing it with its sibling until the root hash is reached. 
-        """
-        proof_hash = proof_hashes.pop()
-
-        if not proof_hash in self.node_table.keys():
-            return False
-
-        sibling = self.node_table[proof_hash]
-        child = sibling.child
-
-        # Because the order in which the hashes are concatenated matters,
-        # we must test to see if questioned_hash is the "mother" or "father"
-        # of its child (the hash is always build as mother + father).
-        if child.mom.hash == questioned_hash:
-            actual_hash = self._md5sum(questioned_hash + sibling.hash)
-        elif child.dad.hash == questioned_hash:
-            actual_hash = self._md5sum(sibling.hash + questioned_hash)
-        else:
-            return False
-
-        if actual_hash != child.hash:
-            return False
-        if actual_hash == self.root_hash:
-            return True
-
-        return self._audit(actual_hash, proof_hashes)
-
-    def _handle_solo_node_case(self,):
-        # The earlier method for building the tree will fail in a one node case
-        if len(self.leaves) == 1:
-            solo_node = self.leaves.pop()
-            self.root_hash = solo_node.hash
-            self.node_table[solo_node.hash] = solo_node
-
-    def _get_leaf_hashes(self):
-        return [node.hash for node in self.node_table.values() if node.mom == None]
-
-    def tree_hash(self):
+    def tree_hash(self) -> None:
         """ Builds a merkle tree by adding leaves one at a time to a stack,
             and combining leaves in the stack when they are of the same height.
             Expected items to be an array of type Node.
@@ -143,7 +59,7 @@ class MerkleTree:
                 stack[-1].height += 1
         self.is_built = True
 
-    def audit(self, data, proof_hashes):
+    def audit(self, data: str, proof_hashes: List[str]) -> bool:
         """ Returns a boolean testing if a data (a file or object)
             is contained in the merkle tree. 
 
@@ -171,7 +87,8 @@ class MerkleTree:
         proof_hashes_cp = copy.copy(proof_hashes)
         return self._audit(hash_, proof_hashes_cp)
     
-    def get_branch(self, item):
+    # TODO consider switching to giving full auth path
+    def get_branch(self, item: str) -> List[str]:
         """ Returns an authentication path for an item (not hashed) in 
             the Merkle tree as a list in order from the top of the tree
             to the bottom.
@@ -186,5 +103,88 @@ class MerkleTree:
             raise Exception("The requested item is not in the merkle tree.")
 
         return self._get_branch_by_hash(hash_)
+
+    def _leafify(self, data: str) -> Node:
+        leaf = Node(None, None, data)
+        leaf.height = 0
+        return leaf
+
+    def _get_branch_by_hash(self, hash_: str) -> List[str]:
+        """ Returns an authentication path as a list in order from the top
+            to the bottom of the tree (assumes preconditions have been checked).
+        """
+        path = []
+        while hash_ != self.root_hash:
+            node = self.node_table[hash_]
+            child = node.child
+            spouse = child.get_parent_by_spouse(hash_)
+            path.append(spouse.hash)
+            hash_ = child.hash
+
+        path.append(hash_)
+        path.reverse()
+        return path
+    
+    def _md5sum(self, data: str) -> str:
+        """ Returns an md5 hash of data. 
+            If data is a file it is expected to contain its full path.
+        """
+        data = str(data)
+        m = hashlib.md5()
+        if os.path.isfile(data):
+            try:   
+                f = open(data, 'rb')
+            except:
+                raise Exception('ERROR: unable to open %s' % data)
+            # Avoid reading the whole file all at once in case of large file
+            while True:
+                d = f.read(8096)
+                if not d:
+                    break
+                m.update(d)
+            f.close()
+        # Otherwise it could be either 1) a directory 2) miscellaneous data (like json)
+        else:
+            m.update(data.encode('utf-8'))
+        return m.hexdigest()
+
+    def _audit(self, questioned_hash: str, proof_hashes: List[str]) -> bool:
+        """ Tests if questioned_hash is a member of the merkle tree by
+            hashing it with its sibling until the root hash is reached. 
+        """
+        proof_hash = proof_hashes.pop()
+
+        if not proof_hash in self.node_table.keys():
+            return False
+
+        sibling = self.node_table[proof_hash]
+        child = sibling.child
+
+        # Because the order in which the hashes are concatenated matters,
+        # we must test to see if questioned_hash is the "mother" or "father"
+        # of its child (the hash is always build as mother + father).
+        if child.mom.hash == questioned_hash:
+            actual_hash = self._md5sum(questioned_hash + sibling.hash)
+        elif child.dad.hash == questioned_hash:
+            actual_hash = self._md5sum(sibling.hash + questioned_hash)
+        else:
+            return False
+
+        if actual_hash != child.hash:
+            return False
+        if actual_hash == self.root_hash:
+            return True
+
+        return self._audit(actual_hash, proof_hashes)
+
+    def _handle_solo_node_case(self,) -> None:
+        # The earlier method for building the tree will fail in a one node case
+        if len(self.leaves) == 1:
+            solo_node = self.leaves.pop()
+            self.root_hash = solo_node.hash
+            self.node_table[solo_node.hash] = solo_node
+
+    def _get_leaf_hashes(self) -> List[str]:
+        return [node.hash for node in self.node_table.values() if node.mom == None]
 
 

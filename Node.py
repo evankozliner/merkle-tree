@@ -1,8 +1,7 @@
 from typing import *
 
-# TODO typing everywhere
 class Node:
-    def __init__(self, mom, dad, hash_val):
+    def __init__(self, mom: 'Node', dad: 'Node', hash_val: str):
         self.mom = mom
         self.dad = dad
         if mom == None:
@@ -14,16 +13,16 @@ class Node:
         self.child = None
 
     @property
-    def height(self):
+    def height(self) -> int:
         return self._height
 
     @height.setter
-    def height(self,height):
+    def height(self,height) -> None:
         if height < 0:
             raise Exception("Attempt to set height < 0.")
         self._height = height
 
-    def get_parent_by_spouse(self, spouse_hash):
+    def get_parent_by_spouse(self, spouse_hash) -> 'Node':
         if spouse_hash == self.mom.hash:
             return self.dad
         return self.mom

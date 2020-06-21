@@ -1,4 +1,5 @@
 from MerkleTree import MerkleTree
+from typing import * 
 import os
 
 TEST_DIR = "test2"
@@ -9,8 +10,7 @@ TEST_FILE_MISSING = "test2/some/fake/path/f9.txt"
 # TODO JSON tests
 # TODO change file name
 # TODO illustrate how files are tested here. Maybe pretty print?
-# TODO typing everywhere
-def get_paths(start_path):
+def get_paths(start_path) -> List[str]:
     """ Returns a list of relative paths for buildling a merkle tree out of a
         file or directory.
     """
@@ -31,9 +31,10 @@ def get_paths(start_path):
 # Suppose I have a movie on my laptop, and I want
 # to give it to you. Then I might build a Merkle Tree out of pieces of the 
 # pieces of the movie as files. As I present those files to you, the downloader, I'll 
-# present a branch that you can validate using a root hash. This way you
-# know I'm not giving you malware or junk.
-def main():
+# present an authentication path that you can validate using a root hash you
+# trust. Because it would be computionally infeasible to do build a fake
+# authentication path, you can trust the data, even you don't know the sender. 
+def main() -> None:
     paths = get_paths(TEST_DIR)
 
     # Seeder builds a merkle tree from the files
@@ -43,12 +44,11 @@ def main():
     path = tree.get_branch(TEST_FILE_VALID)
 
     print(path)
-    # Receiver audits the branch is legimitate. They would also need to verify 
-    # the root hash of the branch was correct
     print(tree.audit(TEST_FILE_VALID,path))
     print(tree.audit(TEST_FILE_MISSING, path))
+    # This shows one authenticated file. 
     # Presenting all the necessary files and their associated authentication
-    # paths is considered a merkle tree traversal. 
+    # paths is considered a "merkle tree traversal". 
 
 if __name__ == "__main__":
     main()

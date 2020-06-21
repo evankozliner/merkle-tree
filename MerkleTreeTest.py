@@ -1,13 +1,13 @@
 import unittest
 import hashlib
 from MerkleTree import MerkleTree
+from typing import *
 
 ONE_ELEMENT_DATA = "text"
 TWO_ELEMENT_DATA = ["one", "two"]
 THREE_ELEMENT_DATA = ["one", "two", "three"]
 
-# TODO typing everywhere
-def md5sum(data):
+def md5sum(data) -> str:
     data = str(data).encode('utf-8')
     m = hashlib.md5()
     m.update(data)
@@ -69,10 +69,6 @@ class TestMerkleTree(unittest.TestCase):
         proof = [ md5sum(THREE_ELEMENT_DATA[0]),md5sum(THREE_ELEMENT_DATA[1]) ]
         result = tree.audit(THREE_ELEMENT_DATA[2], proof)
         self.assertTrue(result)
-
-    # TODO
-    def test_three_element_invalid(self):
-        return
 
     def test_three_element_auth_path(self):
         tree = MerkleTree(THREE_ELEMENT_DATA)
